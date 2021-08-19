@@ -35,3 +35,4 @@ build/
 ### Maven ###
 mvnw*
 .mvn/*
+/.apt_generated_tests/

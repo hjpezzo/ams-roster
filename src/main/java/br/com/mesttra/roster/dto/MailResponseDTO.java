@@ -1,9 +1,8 @@
 package br.com.mesttra.roster.dto;
 
-import lombok.Data;
-
-import javax.persistence.Column;
 import java.time.LocalDateTime;
+
+import lombok.Data;
 
 @Data
 public class MailResponseDTO {
