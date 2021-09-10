@@ -1,12 +1,16 @@
 package br.com.mesttra.roster.service;
 
 import br.com.mesttra.roster.entity.Player;
+import br.com.mesttra.roster.enums.Position;
 import br.com.mesttra.roster.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -15,12 +19,17 @@ public class PlayerService {
 
     PlayerRepository playerRepository;
 
+    //@CacheEvict(cacheNames = "players", allEntries = true)
     public Player addPlayer(Player player) {
         return playerRepository.save(player);
     }
 
-    public List<Player> listPlayers() {
-        return playerRepository.findAll();
+    //@Cacheable(cacheNames = "players", key="#root.method.name")
+    public Page<Player> listPlayers(Optional<Position> position, Pageable pageable) {
+        if(position.isEmpty()) {
+            return playerRepository.findAll(pageable);
+        }
+        return playerRepository.findAllByPosition(position, pageable);
     }
 
     public Optional<Player> getPlayer(Long playerId) {

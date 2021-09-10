@@ -2,8 +2,12 @@ package br.com.mesttra.roster.controller;
 
 import br.com.mesttra.roster.dto.AvailabilityDTO;
 import br.com.mesttra.roster.entity.Player;
+import br.com.mesttra.roster.enums.Position;
 import br.com.mesttra.roster.service.PlayerService;
 import io.swagger.annotations.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/players")
-@Api(value = "Players", tags = { "Players" })
+@Api(value = "Players", tags = {"Players"})
 public class PlayerController {
 
     PlayerService playerService;
@@ -34,12 +38,14 @@ public class PlayerController {
     }
 
     @GetMapping
-    public List<Player> listPlayer() { return playerService.listPlayers();}
+    public Page<Player> listPlayer(@PageableDefault(page = 0, size = 20) Pageable pageable, @RequestParam(required = false) Optional<Position> position) {
+        return playerService.listPlayers(position, pageable);
+    }
 
     @GetMapping(path = "/{id}")
     public Optional<Player> getPlayer(
             @ApiParam(
-                    name =  "id",
+                    name = "id",
                     type = "Long",
                     value = "Player id",
                     example = "2",
